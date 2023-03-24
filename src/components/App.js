@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 //useState react hook --> use to add state variable to component
 //useEffect react hook --> lets us synchronize the component with external system like db, localstorage, api's etc depending on a source
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+//domrouterv5 to v6 changes: https://blog.logrocket.com/migrating-react-router-v6-guide/#migrating-react-router-v6
 
 // useEffext Imp : https://react.dev/reference/react/useEffect
 import "./App.css";
@@ -9,11 +12,6 @@ import ContactList from "./ContactList";
 import AddContact from "./AddContact";
 import { Container } from "semantic-ui-react";
 import { v4 } from "uuid";
-const defaultContacts = [
-  { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
-  { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
-  { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
-];
 function App() {
   //useState func returns a value to be used in state, and the method to update the stateful variable;
   //passing [] empty array in contacts default value;
@@ -25,9 +23,19 @@ function App() {
     JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONTACTS_KEY)) ?? []
   );
   //will be passing a function to handle addContact as prop
-  const addContactHandler = (contact) => {
-    //console.log("In addContactHandler App", contact);
-    setContacts([...contacts, { ...contact, id: v4() }]);
+  const addOrEditContactHandler = (contact) => {
+    //console.log("In addOrEditContactHandler App", contact);
+    if (contact.id) {
+      const newContactList = contacts.map((c) => {
+        if (c.id === contact.id) {
+          return { ...contact };
+        }
+        return c;
+      });
+      setContacts(newContactList);
+    } else {
+      setContacts([...contacts, { ...contact, id: v4() }]);
+    }
   };
 
   //updatingAction on contact(fav/del)
@@ -87,11 +95,61 @@ function App() {
     <div>
       <Header />
       <Container>
-        <AddContact addContactHandler={addContactHandler} />
+        <Router>
+          <Routes>
+            {/* Old v5 react-router-dom uses Switch instead ot Routes and Route had component as paramenter or render func instead of now element */}
+            {/* exact is used match the exact route not the first one it matches */}
+            <Route
+              path="/"
+              exact
+              // the component approact is not preffered bcuz each time router hits this component it executes the arrow function and loads the component again even if nothing is changed ... better approach use render
+              // Component={() => {
+              //   return (
+              //     <ContactList
+              //       contacts={contacts}
+              //       updateContactAction={updateContactActionHandler}
+              //     />
+              //   );
+              // }}
+              //render prop to pass prop syntax
+              // render={(props) => (
+              //   <ContactList
+              //     {...props}
+              //     contacts={contacts}
+              //     updateContactAction={updateContactActionHandler}
+              //   />
+              // )}
+              //v6 way
+              element={
+                <ContactList
+                  contacts={contacts}
+                  updateContactAction={updateContactActionHandler}
+                />
+              }
+            ></Route>
+            <Route
+              path="/add"
+              // render={(props) => (
+              //   <AddContact {...props} addOrEditContactHandler={addOrEditContactHandler} />
+              // )}
+              //v6 way
+              element={
+                <AddContact addOrEditContactHandler={addOrEditContactHandler} />
+              }
+            ></Route>
+            <Route
+              path="/contact/:id"
+              element={
+                <AddContact addOrEditContactHandler={addOrEditContactHandler} />
+              }
+            ></Route>
+          </Routes>
+        </Router>
+        {/* <AddContact addOrEditContactHandler={addOrEditContactHandler} />
         <ContactList
           contacts={contacts}
           updateContactAction={updateContactActionHandler}
-        />
+        /> */}
       </Container>
     </div>
   );

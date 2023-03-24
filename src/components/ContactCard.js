@@ -1,16 +1,22 @@
 import React from "react";
 import { List, Icon, Button, Label, Image } from "semantic-ui-react";
 import UserSvg from "../images/user.svg";
+import { Link } from "react-router-dom";
 //function component syntax
 const ContactCard = (props) => {
   const { id, name, email, starred } = props.contact;
   return (
     <List.Item key={id}>
       <Image floated="left" style={{ width: "70px" }} src={UserSvg} />
-      <List.Content floated="left">
-        <List.Header as="h3">{name || ""}</List.Header>
-        <List.Header as="h4">Email : {email || "N/A"}</List.Header>
-      </List.Content>
+      {/* pathname for path params, search with querystring for query params  -- search: '?random=1'*/}
+      <Link to={{ pathname: `/contact/${id}` }}>
+        <List.Content floated="left">
+          <List.Header as="h3">{name || ""}</List.Header>
+          <List.Header as="h4" style={{ color: "#5095d2" }}>
+            {email || "N/A"}
+          </List.Header>
+        </List.Content>
+      </Link>
       <List.Content floated="right">
         {/* used button as div bcuz cant use button inside button warning */}
         {/* using onContactActionUpdate prop function handler passed from contactList parent */}

@@ -1,5 +1,6 @@
 import React from "react";
 import { Header } from "semantic-ui-react";
+// Semantic UI - https://react.semantic-ui.com/elements/header/
 //function component syntax
 const AppHeader = () => (
   //cannont use simple class because class in JS are classes for oop concept keyword
