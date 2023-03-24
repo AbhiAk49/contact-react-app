@@ -1,0 +1,47 @@
+import React from "react";
+import { List, Icon, Button, Label, Image } from "semantic-ui-react";
+import UserSvg from "../images/user.svg";
+//function component syntax
+const ContactCard = (props) => {
+  const { id, name, email, starred } = props.contact;
+  return (
+    <List.Item key={id}>
+      <Image floated="left" style={{ width: "70px" }} src={UserSvg} />
+      <List.Content floated="left">
+        <List.Header as="h3">{name || ""}</List.Header>
+        <List.Header as="h4">Email : {email || "N/A"}</List.Header>
+      </List.Content>
+      <List.Content floated="right">
+        {/* used button as div bcuz cant use button inside button warning */}
+        {/* using onContactActionUpdate prop function handler passed from contactList parent */}
+        <Button
+          as="div"
+          labelPosition="right"
+          onClick={() => {
+            if (starred) props.onContactActionUpdate("unfavorite", id);
+            else props.onContactActionUpdate("favorite", id);
+          }}
+        >
+          <Button icon color="red">
+            <Icon name={`${starred ? "star outline" : "star"}`} size="large" />
+          </Button>
+          <Label as="a" basic pointing="left">
+            {`${starred ? "Remove From" : "Add To"} Favourite`}
+          </Label>
+        </Button>
+        <Button
+          animated="vertical"
+          onClick={() => {
+            props.onContactActionUpdate("delete", id);
+          }}
+        >
+          <Button.Content hidden>Delete</Button.Content>
+          <Button.Content visible>
+            <Icon name="trash alternate" size="large" />
+          </Button.Content>
+        </Button>
+      </List.Content>
+    </List.Item>
+  );
+};
+export default ContactCard;
