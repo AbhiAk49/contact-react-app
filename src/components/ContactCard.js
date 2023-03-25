@@ -4,9 +4,17 @@ import UserSvg from "../images/user.svg";
 import { Link } from "react-router-dom";
 //function component syntax
 const ContactCard = (props) => {
+  const showOnlyStarred = props.showOnlyStarred;
+  //using showStarred to disable rendering of card if it is starred or not
   const { id, name, email, starred } = props.contact;
   return (
-    <List.Item key={id}>
+    <List.Item
+      key={id}
+      style={{
+        display:
+          (showOnlyStarred && starred) || !showOnlyStarred ? "block" : "none",
+      }}
+    >
       <Image floated="left" style={{ width: "70px" }} src={UserSvg} />
       {/* pathname for path params, search with querystring for query params  -- search: '?random=1'*/}
       <Link to={{ pathname: `/contact/${id}` }}>

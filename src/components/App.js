@@ -10,6 +10,7 @@ import "./App.css";
 import Header from "./Header";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
+import NotFound from "./NotFound";
 import { Container } from "semantic-ui-react";
 import { v4 } from "uuid";
 function App() {
@@ -143,6 +144,7 @@ function App() {
                 <AddContact addOrEditContactHandler={addOrEditContactHandler} />
               }
             ></Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </Router>
         {/* <AddContact addOrEditContactHandler={addOrEditContactHandler} />

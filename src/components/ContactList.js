@@ -1,13 +1,18 @@
-import React from "react";
-import { Container, List, Button } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Container, List, Button, Checkbox } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import ContactCard from "./ContactCard";
+
 const defaultContacts = [
   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
 ];
-const renderContactList = (contacts, updateContactAction) => {
+const renderContactList = (
+  contacts,
+  updateContactAction,
+  showOnlyStarred = false
+) => {
   const contactActionHadler = (action, id) => {
     //console.log("in contact list contactActionHadler", action, id);
     updateContactAction(action, id);
@@ -19,6 +24,7 @@ const renderContactList = (contacts, updateContactAction) => {
         contact={c}
         key={c.id}
         onContactActionUpdate={contactActionHadler}
+        showOnlyStarred={showOnlyStarred}
       ></ContactCard>
     );
   });
@@ -26,8 +32,12 @@ const renderContactList = (contacts, updateContactAction) => {
 
 //function component syntax
 const ContactList = (props) => {
+  //{showStarred ? "true" : "false"} --> showStarred directly in jsx element is not working
+  const [contactListState, updateContactListState] = useState({
+    showStarred: false,
+  });
   //console.log("props in ContactList function", props);
-  //const contacts = props.contacts ?? defaultContacts;
+
   return (
     <List divided verticalAlign="middle">
       <Container
@@ -40,12 +50,29 @@ const ContactList = (props) => {
           marginBottom: "5px",
         }}
       >
-        <h2>Contact List</h2>{" "}
-        <Link to="/add">
-          <Button color="green"> Add Contact </Button>
-        </Link>
+        <h2>Contact List </h2>
+        <div>
+          <Checkbox
+            toggle
+            label="Show Favourites"
+            style={{ marginRight: "10px" }}
+            checked={contactListState.showStarred}
+            onChange={() => {
+              updateContactListState({
+                showStarred: !contactListState.showStarred,
+              });
+            }}
+          />
+          <Link to="/add">
+            <Button color="green"> Add Contact </Button>
+          </Link>
+        </div>
       </Container>
-      {renderContactList(props.contacts, props.updateContactAction)}
+      {renderContactList(
+        props.contacts,
+        props.updateContactAction,
+        contactListState.showStarred
+      )}
     </List>
   );
 };
