@@ -37,7 +37,6 @@ function App() {
   );
   //will be passing a function to handle addContact as prop
   const addOrEditContactHandler = (contact) => {
-    //console.log("In addOrEditContactHandler App", contact);
     if (contact.id) {
       const newContactList = contacts.map((c) => {
         if (c.id === contact.id) {
