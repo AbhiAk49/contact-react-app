@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Button, Checkbox, Form } from "semantic-ui-react";
+import { Container, Button, Checkbox, Form, Message } from "semantic-ui-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 //using navigate hook instead of history as per v5 to v6 react-router changes
 //useSearchParams to get query params -- only in functional component
@@ -8,44 +8,93 @@ import withNavigateHook from "./HOC/withNavigate"; //used in class based compone
 import withRouterParamsHook from "./HOC/withRouterParams"; //used for params and query vals
 //Imp read about react useState hook in class and functional component: https://blog.logrocket.com/guide-usestate-react/#class-functional-components-react, https://react.dev/reference/react/useState
 
-const defaultContactState = { name: "", email: "", starred: false };
+import { getContact } from "../services/contact.service";
+const defaultContactState = {
+  name: "",
+  email: "",
+  starred: false,
+  emailError: false,
+  formError: false,
+  formErrorMessage: "",
+};
 //class component syntax
 class AddContact extends React.Component {
   //will be using state variables (not using any hook in class component)
   state = defaultContactState;
   //alternative to mounted hook in vue, when component is mounted or loaded in dom
-  componentDidMount() {
+  async componentDidMount() {
     const id = this.props.params.id ?? "";
     // const [queryParams, updateQueryParams] = this.props.search;
     // console.log("Add Contact query", queryParams.get("random"));
     // updateQueryParams(`?contact=${id}`);
     if (id) {
-      const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
-      const contacts =
-        JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONTACTS_KEY)) ?? [];
-      const existingContact = contacts.find((c) => c.id === id);
+      const fetchExistingContact = async () => {
+        const response = await getContact(id);
+        if (response.id) {
+          return response;
+        }
+      }
+      const existingContact = await fetchExistingContact();
+      // const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
+      // const contacts =
+      //   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONTACTS_KEY)) ?? [];
+      // const existingContact = contacts.find((c) => c.id === id);
       if (!existingContact) {
         //used timeout bcuz of useEffect warning when using navigate
         setTimeout(() => {
           this.props.navigation("/");
         }, 0);
       } else {
-        this.setState(existingContact);
+        this.setState({ ...existingContact });
       }
     }
   }
 
+  validateEmail = () => {
+    if (
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)
+    ) {
+      this.setState({ emailError: false });
+      return;
+    }
+
+    this.setState({ emailError: true });
+  };
   //submit arrow func
   add = (event) => {
     event.preventDefault();
+    //resetting errors
+    this.setState({
+      emailError: false,
+      formError: false,
+      formErrorMessage: "",
+    });
+    this.validateEmail();
     //basic form validation logic
     //console.log("addContact class comp add state", this.state);
     if (this.state.name.trim() === "" || this.state.email.trim() === "") {
-      alert("All fields are required");
+      //this.state.formErrorMessage = this.state.emailError ? 'Provided Email is not valid' : 'All fields are required';
+      this.setState({
+        formError: true,
+        formErrorMessage: "All fields are required",
+      });
+      //alert("All fields are required");
+      return;
+    }
+    if (this.state.emailError) {
+      this.setState({
+        formError: true,
+        formErrorMessage: "Please provide a valid email",
+      });
       return;
     }
     //using the handler we passed from app parent to addContact child
-    this.props.addOrEditContactHandler(this.state);
+    this.props.addOrEditContactHandler({
+      id: this.state.id,
+      name: this.state.name,
+      email: this.state.email,
+      starred: this.state.starred,
+    });
     this.setState(defaultContactState);
 
     // after saving it should return to home list page
@@ -58,7 +107,15 @@ class AddContact extends React.Component {
       <Container>
         <h2>{`${this.state.id ? "Edit" : "Create"}`} contact</h2>
         <Form onSubmit={this.add}>
-          <Form.Field>
+          <Message
+            error={!this.state.formError}
+            negative={true}
+            //content={this.formErrorMessage}
+          >
+            {this.state.formErrorMessage}
+          </Message>
+
+          <Form.Field required>
             <label> Name</label>
             {/* will be using setState on onChange method of input to update the state value */}
             <input
@@ -69,7 +126,7 @@ class AddContact extends React.Component {
               }}
             />
           </Form.Field>
-          <Form.Field>
+          <Form.Field required>
             <label>Email</label>
             <input
               placeholder="Enter Email"

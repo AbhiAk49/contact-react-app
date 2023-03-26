@@ -4,11 +4,11 @@ import UserSvg from "../images/user.svg";
 import { Link } from "react-router-dom";
 //function component syntax
 const ContactCard = (props) => {
-  const showOnlyStarred = props.showOnlyStarred;
+  //const showOnlyStarred = props.showOnlyStarred;
   //using showStarred to disable rendering of card if it is starred or not
   const { id, name, email, starred } = props.contact;
   //conditional rendering example
-  if ((showOnlyStarred && starred) || !showOnlyStarred) {
+  //if ((showOnlyStarred && starred) || !showOnlyStarred) {
     return (
       <List.Item
         key={id}
@@ -63,8 +63,8 @@ const ContactCard = (props) => {
         </List.Content>
       </List.Item>
     );
-  } else {
-    return null;
-  }
+  // } else {
+  //   return null;
+  // }
 };
 export default ContactCard;

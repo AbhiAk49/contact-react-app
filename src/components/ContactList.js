@@ -38,6 +38,9 @@ const ContactList = (props) => {
   });
   //console.log("props in ContactList function", props);
 
+  const toggleFavHandler = (showStarred) => {
+    props.toggleFav(showStarred);
+  };
   return (
     <List divided verticalAlign="middle">
       <Container
@@ -61,6 +64,7 @@ const ContactList = (props) => {
               updateContactListState({
                 showStarred: !contactListState.showStarred,
               });
+              toggleFavHandler(!contactListState.showStarred);
             }}
           />
           <Link to="/add">

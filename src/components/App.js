@@ -13,6 +13,15 @@ import AddContact from "./AddContact";
 import NotFound from "./NotFound";
 import { Container } from "semantic-ui-react";
 import { v4 } from "uuid";
+import {
+  getContacts,
+  addContact,
+  updateContact,
+  deleteContact,
+} from "../services/contact.service";
+
+import { ToastContainer } from "react-toastify";
+
 function App() {
   //useState func returns a value to be used in state, and the method to update the stateful variable;
   //passing [] empty array in contacts default value;
@@ -20,21 +29,54 @@ function App() {
   //only use the update method returned by useState to update the state
 
   const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONTACTS_KEY)) ?? []
-  );
+  const toggleFav = async (showStarred) => {
+    const contactsFetched = await fetchContactList(showStarred);
+    setContacts(contactsFetched);
+  };
+  const fetchContactList = async (showOnlyStarred = false) => {
+    const response = await getContacts(showOnlyStarred);
+    return response;
+  };
+  const [contacts, setContacts] = useState([]);
+
+  const updateAndFetchContacts = async (contact) => {
+    const id = contact.id;
+    delete contact.id;
+    delete contact.created_by;
+    const response = await updateContact(id, contact);
+    if (response.id) {
+      const contactsFetched = await fetchContactList(false);
+      setContacts(contactsFetched);
+    }
+  };
+
+  const deleteAndFetchContacts = async (id) => {
+    const response = await deleteContact(id);
+    if (response.id) {
+      const contactsFetched = await fetchContactList(false);
+      setContacts(contactsFetched);
+    }
+  };
+
   //will be passing a function to handle addContact as prop
-  const addOrEditContactHandler = (contact) => {
+  const addOrEditContactHandler = async (contact) => {
     if (contact.id) {
-      const newContactList = contacts.map((c) => {
-        if (c.id === contact.id) {
-          return { ...contact };
-        }
-        return c;
-      });
-      setContacts(newContactList);
+      //updating contact
+      updateAndFetchContacts(contact);
+      // const newContactList = contacts.map((c) => {
+      //   if (c.id === contact.id) {
+      //     return { ...contact };
+      //   }
+      //   return c;
+      // });
+      // setContacts(newContactList);
     } else {
-      setContacts([...contacts, { ...contact, id: v4() }]);
+      //adding contact
+      //setContacts([...contacts, { ...contact, id: v4() }]);
+      const response = await addContact(contact);
+      if (response.id) {
+        setContacts([...contacts, response]);
+      }
     }
   };
 
@@ -44,28 +86,33 @@ function App() {
     //console.log("In updateContactActionHandler App", action, id);
     switch (action) {
       case "delete": {
-        const newContactList = contacts.filter((c) => c.id !== id);
-        setContacts(newContactList);
+        deleteAndFetchContacts(id);
         break;
       }
       case "favorite": {
-        const newContactList = contacts.map((c) => {
-          if (c.id === id) {
-            return { ...c, starred: true };
-          }
-          return c;
-        });
-        setContacts(newContactList);
+        const contact = contacts.find((c) => c.id === id);
+        contact["starred"] = true;
+        updateAndFetchContacts(contact);
+        // const newContactList = contacts.map((c) => {
+        //   if (c.id === id) {
+        //     return { ...c, starred: true };
+        //   }
+        //   return c;
+        // });
+        // setContacts(newContactList);
         break;
       }
       case "unfavorite": {
-        const newContactList = contacts.map((c) => {
-          if (c.id === id) {
-            return { ...c, starred: false };
-          }
-          return c;
-        });
-        setContacts(newContactList);
+        const contact = contacts.find((c) => c.id === id);
+        contact["starred"] = false;
+        updateAndFetchContacts(contact);
+        // const newContactList = contacts.map((c) => {
+        //   if (c.id === id) {
+        //     return { ...c, starred: false };
+        //   }
+        //   return c;
+        // });
+        // setContacts(newContactList);
         break;
       }
       default: {
@@ -78,9 +125,9 @@ function App() {
   //1st argument takes a callback function that gets called when the list dependecies (2nd argument) gets changed
 
   //updating localstorage contacts when contacts change
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_CONTACTS_KEY, JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem(LOCAL_STORAGE_CONTACTS_KEY, JSON.stringify(contacts));
+  // }, [contacts]);
 
   //!Not required/ supported empty array as of v18
   //fetching the stored contacts from localstorage -- empty array of dependencies
@@ -91,6 +138,14 @@ function App() {
   //   if (existingContacts) setContacts(existingContacts);
   // }, []);
 
+  //fetching the stored contacts from api
+  useEffect(() => {
+    const getAllContacts = async () => {
+      const contactsFetched = await fetchContactList(false);
+      setContacts(contactsFetched);
+    };
+    getAllContacts();
+  }, []);
   return (
     <div>
       <Header />
@@ -124,6 +179,7 @@ function App() {
                 <ContactList
                   contacts={contacts}
                   updateContactAction={updateContactActionHandler}
+                  toggleFav={toggleFav}
                 />
               }
             ></Route>
@@ -152,6 +208,7 @@ function App() {
           updateContactAction={updateContactActionHandler}
         /> */}
       </Container>
+      <ToastContainer />
     </div>
   );
 }
