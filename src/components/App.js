@@ -19,7 +19,7 @@ function App() {
   //useState hook used only in functional component
   //only use the update method returned by useState to update the state
 
-  //otp receive logic
+  //otp receive logic --> (requires https to work)
   useEffect(() => {
     // Define the 'otpless' function
     window.otpless = (otplessUser) => {
