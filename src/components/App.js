@@ -19,6 +19,18 @@ function App() {
   //useState hook used only in functional component
   //only use the update method returned by useState to update the state
 
+  //otp receive logic
+  useEffect(() => {
+    // Define the 'otpless' function
+    window.otpless = (otplessUser) => {
+     // Retrieve the user's details after successful login
+     const waName = otplessUser.waName;
+     const waNumber = otplessUser.waNumber;
+         
+     // Handle the signup/signin process
+     // ...
+    };
+   }, []);
   const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
   const [contacts, setContacts] = useState(
     JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONTACTS_KEY)) ?? []
