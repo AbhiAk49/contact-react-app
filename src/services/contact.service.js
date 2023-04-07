@@ -2,13 +2,11 @@ import _axios from "./axios.service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const handleError = (error) => {
+  console.error(error);
   if (error.response && error.response.data && error.response.data.message) {
-    console.error(error.response.data.message);
     toast(error.response.data.message, { autoClose: 3000, type: "error" });
   } else {
-    console.error(error);
-    console.error("Something went wrong");
-    toast("Something went wrong");
+    toast.error("Something went wrong");
   }
 };
 const getContacts = async (starred = false) => {

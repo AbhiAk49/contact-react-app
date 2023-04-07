@@ -9,7 +9,7 @@ const defaultContacts = [
   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
 ];
 const renderContactList = (
-  contacts,
+  contacts = [],
   updateContactAction,
   showOnlyStarred = false
 ) => {
