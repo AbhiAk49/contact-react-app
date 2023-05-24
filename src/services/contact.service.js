@@ -2,7 +2,7 @@ import _axios from "./axios.service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const handleError = (error) => {
-  console.error(error);
+  console.error('axios service error',error);
   if (error.response && error.response.data && error.response.data.message) {
     toast(error.response.data.message, { autoClose: 3000, type: "error" });
   } else {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 //useState react hook --> use to add state variable to component
 //useEffect react hook --> lets us synchronize the component with external system like db, localstorage, api's etc depending on a source
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ChakraProvider, extendTheme, Container } from "@chakra-ui/react";
 
 //domrouterv5 to v6 changes: https://blog.logrocket.com/migrating-react-router-v6-guide/#migrating-react-router-v6
 
@@ -11,7 +12,6 @@ import Header from "./Header";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
 import NotFound from "./NotFound";
-import { Container } from "semantic-ui-react";
 import { v4 } from "uuid";
 import {
   getContacts,
@@ -29,22 +29,24 @@ function App() {
   //only use the update method returned by useState to update the state
 
   const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
+  const [contacts, setContacts] = useState([]);
+  //const [showFav, setShowFav] = useState(false);
   const toggleFav = async (showStarred) => {
     const contactsFetched = await fetchContactList(showStarred);
     setContacts(contactsFetched);
+    //setShowFav((prevState)=> !prevState);
   };
   const fetchContactList = async (showOnlyStarred = false) => {
     const response = await getContacts(showOnlyStarred);
     return response;
   };
-  const [contacts, setContacts] = useState([]);
 
   const updateAndFetchContacts = async (contact) => {
     const id = contact.id;
     delete contact.id;
     delete contact.created_by;
     const response = await updateContact(id, contact);
-    if (response.id) {
+    if (response && response.id) {
       const contactsFetched = await fetchContactList(false);
       setContacts(contactsFetched);
     }
@@ -52,7 +54,7 @@ function App() {
 
   const deleteAndFetchContacts = async (id) => {
     const response = await deleteContact(id);
-    if (response.id) {
+    if (response && response.id) {
       const contactsFetched = await fetchContactList(false);
       setContacts(contactsFetched);
     }
@@ -74,7 +76,7 @@ function App() {
       //adding contact
       //setContacts([...contacts, { ...contact, id: v4() }]);
       const response = await addContact(contact);
-      if (response.id) {
+      if (response && response.id) {
         setContacts([...contacts, response]);
       }
     }
@@ -140,75 +142,98 @@ function App() {
 
   //fetching the stored contacts from api
   useEffect(() => {
+    let isIgnore = false;
     const getAllContacts = async () => {
       const contactsFetched = await fetchContactList(false);
-      setContacts(contactsFetched);
+      if (!isIgnore) {
+        setContacts(contactsFetched);
+      }
     };
     getAllContacts();
+    return () => {
+      isIgnore = true;
+    };
   }, []);
+
+  const colors = {
+    brand: {
+      900: "#1a365d",
+      800: "#153e75",
+      700: "#2a69ac",
+    },
+  };
+
+  const theme = extendTheme({ colors });
   return (
     <div>
-      <Header />
-      <Container>
-        <Router>
-          <Routes>
-            {/* Old v5 react-router-dom uses Switch instead ot Routes and Route had component as paramenter or render func instead of now element */}
-            {/* exact is used match the exact route not the first one it matches */}
-            <Route
-              path="/"
-              exact
-              // the component approact is not preffered bcuz each time router hits this component it executes the arrow function and loads the component again even if nothing is changed ... better approach use render
-              // Component={() => {
-              //   return (
-              //     <ContactList
-              //       contacts={contacts}
-              //       updateContactAction={updateContactActionHandler}
-              //     />
-              //   );
-              // }}
-              //render prop to pass prop syntax
-              // render={(props) => (
-              //   <ContactList
-              //     {...props}
-              //     contacts={contacts}
-              //     updateContactAction={updateContactActionHandler}
-              //   />
-              // )}
-              //v6 way
-              element={
-                <ContactList
-                  contacts={contacts}
-                  updateContactAction={updateContactActionHandler}
-                  toggleFav={toggleFav}
-                />
-              }
-            ></Route>
-            <Route
-              path="/add"
-              // render={(props) => (
-              //   <AddContact {...props} addOrEditContactHandler={addOrEditContactHandler} />
-              // )}
-              //v6 way
-              element={
-                <AddContact addOrEditContactHandler={addOrEditContactHandler} />
-              }
-            ></Route>
-            <Route
-              path="/contact/:id"
-              element={
-                <AddContact addOrEditContactHandler={addOrEditContactHandler} />
-              }
-            ></Route>
-            <Route path="*" element={<NotFound />}></Route>
-          </Routes>
-        </Router>
-        {/* <AddContact addOrEditContactHandler={addOrEditContactHandler} />
+      <ChakraProvider resetCSS={true} theme={theme}>
+        <Header />
+        <Container>
+          <Router>
+            <Routes>
+              {/* Old v5 react-router-dom uses Switch instead ot Routes and Route had component as paramenter or render func instead of now element */}
+              {/* exact is used match the exact route not the first one it matches */}
+              <Route
+                path="/"
+                exact
+                // the component approact is not preffered bcuz each time router hits this component it executes the arrow function and loads the component again even if nothing is changed ... better approach use render
+                // Component={() => {
+                //   return (
+                //     <ContactList
+                //       contacts={contacts}
+                //       updateContactAction={updateContactActionHandler}
+                //     />
+                //   );
+                // }}
+                //render prop to pass prop syntax
+                // render={(props) => (
+                //   <ContactList
+                //     {...props}
+                //     contacts={contacts}
+                //     updateContactAction={updateContactActionHandler}
+                //   />
+                // )}
+                //v6 way
+                element={
+                  <ContactList
+                    contacts={contacts}
+                    updateContactAction={updateContactActionHandler}
+                    toggleFav={toggleFav}
+                    //onlyFav={showFav}
+                  />
+                }
+              ></Route>
+              <Route
+                path="/add"
+                // render={(props) => (
+                //   <AddContact {...props} addOrEditContactHandler={addOrEditContactHandler} />
+                // )}
+                //v6 way
+                element={
+                  <AddContact
+                    addOrEditContactHandler={addOrEditContactHandler}
+                  />
+                }
+              ></Route>
+              <Route
+                path="/contact/:id"
+                element={
+                  <AddContact
+                    addOrEditContactHandler={addOrEditContactHandler}
+                  />
+                }
+              ></Route>
+              <Route path="*" element={<NotFound />}></Route>
+            </Routes>
+          </Router>
+          {/* <AddContact addOrEditContactHandler={addOrEditContactHandler} />
         <ContactList
           contacts={contacts}
           updateContactAction={updateContactActionHandler}
         /> */}
-      </Container>
-      <ToastContainer />
+        </Container>
+        <ToastContainer />
+      </ChakraProvider>
     </div>
   );
 }

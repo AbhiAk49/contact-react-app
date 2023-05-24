@@ -1,6 +1,15 @@
 import React, { useState } from "react";
-import { Container, List, Button, Checkbox } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import {
+  Container,
+  Button,
+  FormLabel,
+  Switch,
+  List,
+  Heading,
+  Link,
+  Flex,
+} from "@chakra-ui/react";
+import { Link as ReachLink } from "react-router-dom";
 import ContactCard from "./ContactCard";
 
 const defaultContacts = [
@@ -42,9 +51,8 @@ const ContactList = (props) => {
     props.toggleFav(showStarred);
   };
   return (
-    <List divided verticalAlign="middle">
+    <List spacing={3}>
       <Container
-        fluid
         // css properties must be camelCased
         style={{
           display: "flex",
@@ -53,13 +61,12 @@ const ContactList = (props) => {
           marginBottom: "5px",
         }}
       >
-        <h2>Contact List </h2>
-        <div>
-          <Checkbox
-            toggle
-            label="Show Favourites"
+        <Heading size="lg">Contact List </Heading>
+        <Flex align="center">
+          <FormLabel> Show Favourites</FormLabel>
+          <Switch
             style={{ marginRight: "10px" }}
-            checked={contactListState.showStarred}
+            isChecked={contactListState.showStarred}
             onChange={() => {
               updateContactListState({
                 showStarred: !contactListState.showStarred,
@@ -67,10 +74,10 @@ const ContactList = (props) => {
               toggleFavHandler(!contactListState.showStarred);
             }}
           />
-          <Link to="/add">
-            <Button color="green"> Add Contact </Button>
+          <Link as={ReachLink} to="/add">
+            <Button colorScheme="green"> Add Contact </Button>
           </Link>
-        </div>
+        </Flex>
       </Container>
       {renderContactList(
         props.contacts,

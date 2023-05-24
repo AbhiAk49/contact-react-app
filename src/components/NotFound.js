@@ -1,18 +1,28 @@
 import React from "react";
-import { Button, Header, Icon, Segment } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import {
+  Card,
+  CardFooter,
+  CardBody,
+  Text,
+  Button,
+  Link,
+} from "@chakra-ui/react";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { Link as ReachLink } from "react-router-dom";
+//renaming react router link as ReachLink to use with Link Chakra component
 const NotFound = () => (
-  <Segment placeholder>
-    <Header icon>
-      <Icon name="broken chain" />
-      Seems like the page you are looking for not exist
-    </Header>
-    <Segment.Inline>
-      <Link to="/">
-        <Button primary>Return to Home</Button>
-      </Link>
-    </Segment.Inline>
-  </Segment>
+    <Card align="center" size="lg" m="20px">
+      <CardBody minW="480px" p="10px">
+        <Text align="center">
+          <InfoOutlineIcon /> Seems like the page you are looking for not exist
+        </Text>
+      </CardBody>
+      <CardFooter pt="8px">
+        <Link as={ReachLink} to="/">
+          <Button colorScheme="blue">Return to Home</Button>
+        </Link>
+      </CardFooter>
+    </Card>
 );
 
 export default NotFound;
