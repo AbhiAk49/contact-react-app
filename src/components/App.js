@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 //useState react hook --> use to add state variable to component
 //useEffect react hook --> lets us synchronize the component with external system like db, localstorage, api's etc depending on a source
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -12,7 +12,7 @@ import Header from "./Header";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
 import NotFound from "./NotFound";
-import { v4 } from "uuid";
+//import { v4 } from "uuid";
 import {
   getContacts,
   addContact,
@@ -28,18 +28,19 @@ function App() {
   //useState hook used only in functional component
   //only use the update method returned by useState to update the state
 
-  const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
+  //const LOCAL_STORAGE_CONTACTS_KEY = "__ra-contacts";
   const [contacts, setContacts] = useState([]);
+  const [onlyFav, setOnlyFav] = useState(false);
   //const [showFav, setShowFav] = useState(false);
-  const toggleFav = async (showStarred) => {
+  const toggleOnlyFav = async (showStarred) => {
     const contactsFetched = await fetchContactList(showStarred);
     setContacts(contactsFetched);
-    //setShowFav((prevState)=> !prevState);
+    setOnlyFav(showStarred);
   };
-  const fetchContactList = async (showOnlyStarred = false) => {
-    const response = await getContacts(showOnlyStarred);
+  const fetchContactList = useCallback(async () => {
+    const response = await getContacts(onlyFav);
     return response;
-  };
+  }, [onlyFav]);
 
   const updateAndFetchContacts = async (contact) => {
     const id = contact.id;
@@ -78,6 +79,7 @@ function App() {
       const response = await addContact(contact);
       if (response && response.id) {
         setContacts([...contacts, response]);
+        setOnlyFav(false);
       }
     }
   };
@@ -153,7 +155,7 @@ function App() {
     return () => {
       isIgnore = true;
     };
-  }, []);
+  }, [fetchContactList]);
 
   const colors = {
     brand: {
@@ -171,7 +173,7 @@ function App() {
         <Container>
           <Router>
             <Routes>
-              {/* Old v5 react-router-dom uses Switch instead ot Routes and Route had component as paramenter or render func instead of now element */}
+              {/* Old v5 react-router-dom uses Switch instead of Routes and Route had component as paramenter or render func instead of now element */}
               {/* exact is used match the exact route not the first one it matches */}
               <Route
                 path="/"
@@ -198,13 +200,13 @@ function App() {
                   <ContactList
                     contacts={contacts}
                     updateContactAction={updateContactActionHandler}
-                    toggleFav={toggleFav}
-                    //onlyFav={showFav}
+                    toggleOnlyFav={toggleOnlyFav}
+                    onlyFav={onlyFav}
                   />
                 }
               ></Route>
               <Route
-                path="/add"
+                path="/contact"
                 // render={(props) => (
                 //   <AddContact {...props} addOrEditContactHandler={addOrEditContactHandler} />
                 // )}

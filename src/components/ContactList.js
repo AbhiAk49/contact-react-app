@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Button,
@@ -11,12 +11,13 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
 import ContactCard from "./ContactCard";
+import withRouterParamsHook from "./HOC/withRouterParams"; //used for params and query vals
 
-const defaultContacts = [
-  { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
-  { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
-  { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
-];
+// const defaultContacts = [
+//   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
+//   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
+//   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
+// ];
 const renderContactList = (
   contacts = [],
   updateContactAction,
@@ -41,17 +42,30 @@ const renderContactList = (
 
 //function component syntax
 const ContactList = (props) => {
-  //{showStarred ? "true" : "false"} --> showStarred directly in jsx element is not working
+  const [, /*URLSearchParams*/ setSearchParams] = props.search;
   const [contactListState, updateContactListState] = useState({
-    showStarred: false,
+    showStarred: props.onlyFav,
   });
+
+  useEffect(() => {
+    if (contactListState.showStarred) {
+      setSearchParams({ fav_only: "true" });
+      //updateContactListState({ showStarred: true });
+    } else {
+      // updateContactListState({ showStarred: false });
+      setSearchParams({ fav_only: "false" });
+    }
+  }, [contactListState.showStarred, setSearchParams]);
   //console.log("props in ContactList function", props);
 
   const toggleFavHandler = (showStarred) => {
-    props.toggleFav(showStarred);
+    setSearchParams({
+      fav_only: !contactListState.showStarred ? "true" : "false",
+    });
+    props.toggleOnlyFav(!showStarred);
   };
   return (
-    <List spacing={3}>
+    <List spacing={4}>
       <Container
         // css properties must be camelCased
         style={{
@@ -71,10 +85,10 @@ const ContactList = (props) => {
               updateContactListState({
                 showStarred: !contactListState.showStarred,
               });
-              toggleFavHandler(!contactListState.showStarred);
+              toggleFavHandler(contactListState.showStarred);
             }}
           />
-          <Link as={ReachLink} to="/add">
+          <Link as={ReachLink} to="/contact">
             <Button colorScheme="green"> Add Contact </Button>
           </Link>
         </Flex>
@@ -101,4 +115,4 @@ const ContactList = (props) => {
 //   }
 // }
 
-export default ContactList;
+export default withRouterParamsHook(ContactList);

@@ -6,12 +6,11 @@ import {
   Checkbox,
   FormControl,
   FormLabel,
-  Link,
   FormErrorMessage,
   Input,
   Flex,
 } from "@chakra-ui/react";
-import { Link as ReachLink, useNavigate, useParams } from "react-router-dom";
+//import { Link as ReachLink, useNavigate, useParams } from "react-router-dom";
 
 // react-hook-form for form validation - https://react-hook-form.com/get-started
 //using navigate hook instead of history as per v5 to v6 react-router changes
@@ -43,7 +42,7 @@ const defaultContactState = {
 //     const id = this.props.params.id ?? "";
 //     // const [queryParams, updateQueryParams] = this.props.search;
 //     // console.log("Add Contact query", queryParams.get("random"));
-//     // updateQueryParams(`?contact=${id}`);
+//     // updateQueryParams({contact: id});
 //     if (id) {
 //       const fetchExistingContact = async () => {
 //         const response = await getContact(id);
@@ -194,9 +193,10 @@ const AddContact = (props) => {
       if (contactId) {
         const existingContact = await fetchExistingContact();
         if (!existingContact) {
-          setTimeout(() => {
-            navigation("/");
-          }, 0);
+          navigation("/");
+          // setTimeout(() => {
+          //   navigation("/");
+          // }, 0);
         } else {
           updateContact({ ...existingContact });
         }
@@ -314,9 +314,10 @@ const AddContact = (props) => {
         >
           {`${contactState.id ? "Save" : "Create"}`}
         </Button>
-        <Link as={ReachLink} to="/">
+        {/* <Link as={ReachLink} to="/">
           <Button> Back </Button>
-        </Link>
+        </Link> */}
+        <Button onClick={() => navigation(-1)}> Back </Button>
       </div>
     </Container>
   );
