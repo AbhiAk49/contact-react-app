@@ -292,7 +292,7 @@ const AddContact = (props) => {
       <Flex align="center">
         <FormLabel>Add this contact to favourite ?</FormLabel>
         <Checkbox
-          checked={contactState.starred}
+          isChecked={contactState.starred}
           onChange={() => {
             updateContact((prevState) =>
               Object.assign({}, prevState, { starred: !prevState.starred })

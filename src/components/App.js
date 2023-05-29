@@ -66,16 +66,8 @@ function App() {
     if (contact.id) {
       //updating contact
       updateAndFetchContacts(contact);
-      // const newContactList = contacts.map((c) => {
-      //   if (c.id === contact.id) {
-      //     return { ...contact };
-      //   }
-      //   return c;
-      // });
-      // setContacts(newContactList);
     } else {
       //adding contact
-      //setContacts([...contacts, { ...contact, id: v4() }]);
       const response = await addContact(contact);
       if (response && response.id) {
         setContacts([...contacts, response]);
@@ -87,7 +79,6 @@ function App() {
   //updatingAction on contact(fav/del)
 
   const updateContactActionHandler = (action, id) => {
-    //console.log("In updateContactActionHandler App", action, id);
     switch (action) {
       case "delete": {
         deleteAndFetchContacts(id);
@@ -97,26 +88,12 @@ function App() {
         const contact = contacts.find((c) => c.id === id);
         contact["starred"] = true;
         updateAndFetchContacts(contact);
-        // const newContactList = contacts.map((c) => {
-        //   if (c.id === id) {
-        //     return { ...c, starred: true };
-        //   }
-        //   return c;
-        // });
-        // setContacts(newContactList);
         break;
       }
       case "unfavorite": {
         const contact = contacts.find((c) => c.id === id);
         contact["starred"] = false;
         updateAndFetchContacts(contact);
-        // const newContactList = contacts.map((c) => {
-        //   if (c.id === id) {
-        //     return { ...c, starred: false };
-        //   }
-        //   return c;
-        // });
-        // setContacts(newContactList);
         break;
       }
       default: {
