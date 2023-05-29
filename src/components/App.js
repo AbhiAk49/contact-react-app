@@ -37,10 +37,10 @@ function App() {
     setContacts(contactsFetched);
     setOnlyFav(showStarred);
   };
-  const fetchContactList = useCallback(async () => {
-    const response = await getContacts(onlyFav);
+  const fetchContactList = useCallback(async (showStarred) => {
+    const response = await getContacts(showStarred);
     return response;
-  }, [onlyFav]);
+  }, []);
 
   const updateAndFetchContacts = async (contact) => {
     const id = contact.id;
@@ -48,7 +48,7 @@ function App() {
     delete contact.created_by;
     const response = await updateContact(id, contact);
     if (response && response.id) {
-      const contactsFetched = await fetchContactList(false);
+      const contactsFetched = await fetchContactList(onlyFav);
       setContacts(contactsFetched);
     }
   };
@@ -56,7 +56,7 @@ function App() {
   const deleteAndFetchContacts = async (id) => {
     const response = await deleteContact(id);
     if (response && response.id) {
-      const contactsFetched = await fetchContactList(false);
+      const contactsFetched = await fetchContactList(onlyFav);
       setContacts(contactsFetched);
     }
   };
@@ -70,8 +70,8 @@ function App() {
       //adding contact
       const response = await addContact(contact);
       if (response && response.id) {
-        setContacts([...contacts, response]);
-        setOnlyFav(false);
+        const contactsFetched = await fetchContactList(onlyFav);
+        setContacts(contactsFetched);
       }
     }
   };
