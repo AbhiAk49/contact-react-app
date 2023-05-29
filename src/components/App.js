@@ -33,7 +33,6 @@ function App() {
   const [onlyFav, setOnlyFav] = useState(false);
   //const [showFav, setShowFav] = useState(false);
   const toggleOnlyFav = async (showStarred) => {
-    console.log('inside toggleOnlyFav');
     const contactsFetched = await fetchContactList(showStarred);
     setContacts(contactsFetched);
     setOnlyFav(showStarred);
