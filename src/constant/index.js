@@ -1,0 +1,5 @@
+export const API_FETCH_STATUS = {
+  LOADING: "LOADING",
+  SUCCESS: "SUCCESS",
+  ERROR: "ERROR",
+};

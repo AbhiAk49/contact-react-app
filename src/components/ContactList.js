@@ -3,29 +3,64 @@ import {
   Container,
   Button,
   FormLabel,
-  Switch,
   List,
   Heading,
   Link,
-  Flex,
+  Spinner,
+  Center,
+  Select,
 } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
 import ContactCard from "./ContactCard";
 import withRouterParamsHook from "./HOC/withRouterParams"; //used for params and query vals
 
+import { useDispatch, useSelector } from "react-redux";
+import { getContactsState } from "../redux/reducers/contacts/selector";
+import { fetchContacts } from "../redux/action/contactActionTypes";
+import {
+  deleteContactById,
+  updateContactStarredById,
+} from "../redux/action/selectedContactActionTypes";
 // const defaultContacts = [
 //   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
 //   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
 //   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
 // ];
-const renderContactList = (
-  contacts = [],
-  updateContactAction,
-  showOnlyStarred = false
-) => {
+const renderContactList = (contacts = [], dispatch, showStarred = false) => {
   const contactActionHadler = (action, id) => {
-    //console.log("in contact list contactActionHadler", action, id);
-    updateContactAction(action, id);
+    switch (action) {
+      case "delete": {
+        dispatch(deleteContactById(id, showStarred));
+        break;
+      }
+      case "favorite": {
+        dispatch(
+          updateContactStarredById(
+            id,
+            {
+              starred: true,
+            },
+            showStarred
+          )
+        );
+        break;
+      }
+      case "unfavorite": {
+        dispatch(
+          updateContactStarredById(
+            id,
+            {
+              starred: false,
+            },
+            showStarred
+          )
+        );
+        break;
+      }
+      default: {
+        console.error("invalid contact action");
+      }
+    }
   };
   return contacts.map((c) => {
     //each item in list should have key
@@ -34,7 +69,6 @@ const renderContactList = (
         contact={c}
         key={c.id}
         onContactActionUpdate={contactActionHadler}
-        showOnlyStarred={showOnlyStarred}
       ></ContactCard>
     );
   });
@@ -42,77 +76,85 @@ const renderContactList = (
 
 //function component syntax
 const ContactList = (props) => {
-  const [, /*URLSearchParams*/ setSearchParams] = props.search;
+  const contactState = useSelector(getContactsState);
+  const { data, status, showStarred } = contactState;
+  // const [, /*URLSearchParams*/ setSearchParams] = props.search;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts(showStarred));
+  }, [dispatch, showStarred]);
+
   const [contactListState, updateContactListState] = useState({
-    showStarred: props.onlyFav,
+    showStarred: showStarred,
   });
 
-  useEffect(() => {
-    if (contactListState.showStarred) {
-      setSearchParams({ fav_only: "true" });
-      //updateContactListState({ showStarred: true });
-    } else {
-      // updateContactListState({ showStarred: false });
-      setSearchParams({ fav_only: "false" });
-    }
-  }, [contactListState.showStarred, setSearchParams]);
-  //console.log("props in ContactList function", props);
+  // useEffect(() => {
+  //   if (contactListState.showStarred) {
+  //     setSearchParams({ fav_only: "true" });
+  //   } else {
+  //     setSearchParams({ fav_only: "false" });
+  //   }
+  // }, [contactListState.showStarred, setSearchParams]);
 
   const toggleFavHandler = (showStarred) => {
-    setSearchParams({
-      fav_only: !contactListState.showStarred ? "true" : "false",
-    });
-    props.toggleOnlyFav(!showStarred);
+    // setSearchParams({
+    //   fav_only: !contactListState.showStarred ? "true" : "false",
+    // });
+    dispatch(fetchContacts(!showStarred));
   };
   return (
-    <List spacing={4}>
+    <>
+      <Center>
+        <Heading size="lg">Contact List </Heading>
+      </Center>
       <Container
         // css properties must be camelCased
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "5px",
+          marginBottom: "10px",
         }}
       >
-        <Heading size="lg">Contact List </Heading>
-        <Flex align="center">
-          <FormLabel> Show Favourites</FormLabel>
-          <Switch
-            style={{ marginRight: "10px" }}
-            isChecked={contactListState.showStarred}
+        <div>
+          <FormLabel>Filter</FormLabel>
+          <Select
+            variant="outline"
+            value={contactListState.showStarred}
             onChange={() => {
               updateContactListState({
                 showStarred: !contactListState.showStarred,
               });
               toggleFavHandler(contactListState.showStarred);
             }}
-          />
-          <Link as={ReachLink} to="/contact">
-            <Button colorScheme="green"> Add Contact </Button>
-          </Link>
-        </Flex>
+          >
+            <option value={false}>All</option>
+            <option value={true}>Favourites Only</option>
+          </Select>
+        </div>
+        <Link as={ReachLink} to="/contact">
+          <Button colorScheme="green"> Add Contact </Button>
+        </Link>
       </Container>
-      {renderContactList(
-        props.contacts,
-        props.updateContactAction,
-        contactListState.showStarred
-      )}
-    </List>
+      <div>
+        {status === "LOADING" ? (
+          <Center mt="10px">
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </Center>
+        ) : (
+          <List spacing={5}>
+            {renderContactList(data, dispatch, showStarred)}
+          </List>
+        )}
+      </div>
+    </>
   );
 };
-
-//class component syntax
-// class ContactList extends React.Component {
-//   render() {
-//     //console.log("props in ContactList class", this.props);
-//     return (
-//       <List>
-//         <h2>Contact List</h2>
-//         {renderContactList(this.props.contacts)}
-//       </List>
-//     );
-//   }
-// }
 
 export default withRouterParamsHook(ContactList);
