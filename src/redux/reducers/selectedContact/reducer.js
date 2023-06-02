@@ -1,5 +1,5 @@
 import { ActionTypes } from "../../constants/selected-contact-action-types";
-import { API_FETCH_STATUS } from "../../../constant";
+import { API_FETCH_STATUS } from "../../../constants";
 const initialState = {
   contact: {},
   status: "idle", // idle | loading | success | error

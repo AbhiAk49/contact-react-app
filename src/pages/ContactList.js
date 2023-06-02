@@ -11,8 +11,8 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
-import ContactCard from "./ContactCard";
-import withRouterParamsHook from "./HOC/withRouterParams"; //used for params and query vals
+import ContactCard from "../components/ContactCard";
+import withRouterParamsHook from "../components/HOC/withRouterParams"; //used for params and query vals
 
 import { useDispatch, useSelector } from "react-redux";
 import { getContactsState } from "../redux/reducers/contacts/selector";
@@ -81,6 +81,7 @@ const ContactList = (props) => {
   // const [, /*URLSearchParams*/ setSearchParams] = props.search;
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log("list useEffect called");
     dispatch(fetchContacts(showStarred));
   }, [dispatch, showStarred]);
 

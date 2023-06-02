@@ -1,10 +1,6 @@
 import { ActionTypes } from "../../constants/contact-action-types";
-import { API_FETCH_STATUS } from "../../../constant";
-// const defaultContacts = [
-//   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
-//   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
-//   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
-// ];
+import { API_FETCH_STATUS } from "../../../constants";
+
 const initialState = {
   data: [],
   showStarred: false,

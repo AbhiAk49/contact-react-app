@@ -18,8 +18,8 @@ import {
 //using navigate hook instead of history as per v5 to v6 react-router changes
 //useSearchParams to get query params -- only in functional component
 //useParams to get path params -- only in functional component
-import withNavigateHook from "./HOC/withNavigate"; //used in class based component navigation
-import withRouterParamsHook from "./HOC/withRouterParams"; //used for params and query vals
+import withNavigateHook from "../components/HOC/withNavigate"; //used in class based component navigation
+import withRouterParamsHook from "../components/HOC/withRouterParams"; //used for params and query vals
 //Imp read about react useState hook in class and functional component: https://blog.logrocket.com/guide-usestate-react/#class-functional-components-react, https://react.dev/reference/react/useState
 
 import { useDispatch, useSelector } from "react-redux";
