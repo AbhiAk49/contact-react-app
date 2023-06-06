@@ -17,21 +17,44 @@ import Header from "../components/Header";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
 import NotFound from "../components/NotFound";
+import AuthFormLogin from "../components/AuthFormLogin";
+import AuthFormRegister from "../components/AuthFormRegister";
 //import { v4 } from "uuid";
 import { ToastContainer } from "react-toastify";
+import { AuthorizeUser } from "../middlewares/auth";
 
 const router = createBrowserRouter([
   {
+    path: "/auth/login",
+    element: <AuthFormLogin />,
+  },
+  {
+    path: "/auth/register",
+    element: <AuthFormRegister />,
+  },
+  {
     path: "/",
-    element: <ContactList />,
+    element: (
+      <AuthorizeUser>
+        <ContactList />
+      </AuthorizeUser>
+    ),
   },
   {
     path: "/contact",
-    element: <AddContact />,
+    element: (
+      <AuthorizeUser>
+        <AddContact />
+      </AuthorizeUser>
+    ),
   },
   {
     path: "/contact/:id",
-    element: <AddContact />,
+    element: (
+      <AuthorizeUser>
+        <AddContact />
+      </AuthorizeUser>
+    ),
   },
   {
     path: "*",

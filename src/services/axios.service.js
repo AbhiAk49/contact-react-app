@@ -1,11 +1,52 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { SESSION_KEY } from "../constants";
 const baseURL = process.env.REACT_APP_BASE_API_URL;
 //using static token -- api key
-const access_token = process.env.REACT_APP_ACCESS_TOKEN;
-export default axios.create({
+
+export const _axios = axios.create({
   baseURL,
-  headers: {
-    Authorization: `Bearer ${access_token}`,
-    "Content-Type": "application/json",
-  },
 });
+
+export const onLoadError = (error) => {
+  //console.error("onLoadError", error);
+  sessionStorage.removeItem(SESSION_KEY);
+  throw new Error(error?.response?.data?.message || "Session Expired");
+};
+
+export const handleError = (error) => {
+  if (
+    error.response &&
+    error.response.status &&
+    [401, 403].includes(error.response.status)
+  ) {
+    console.error("Session expired");
+    sessionStorage.removeItem(SESSION_KEY);
+    //reloading page when we receive un-auth error
+    window.location.reload();
+    throw new Error(error.response.data.message || "Session Expired");
+  } else if (
+    error.response &&
+    error.response.data &&
+    error.response.data.message
+  ) {
+    toast(error.response.data.message, { autoClose: 3000, type: "error" });
+    throw new Error(error.response.data.message);
+  } else {
+    console.error("axios service error", error);
+    toast.error("Something went wrong");
+    throw new Error("Something went wrong");
+  }
+};
+
+export const handleUnAuthError = (error) => {
+  if (error.response && error.response.data && error.response.data.message) {
+    toast(error.response.data.message, { autoClose: 3000, type: "error" });
+    throw new Error(error.response.data.message);
+  } else {
+    console.error("axios service error", error);
+    toast.error("Something went wrong");
+    throw new Error("Something went wrong");
+  }
+};

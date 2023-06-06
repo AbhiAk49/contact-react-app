@@ -6,7 +6,7 @@ const initialState = {
   error: null,
 };
 //reducer func takes 2 args (state, action)
-export default function contactsReducer(
+export default function selectedContactReducer(
   state = initialState,
   { type, payload }
 ) {

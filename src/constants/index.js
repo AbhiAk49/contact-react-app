@@ -3,3 +3,5 @@ export const API_FETCH_STATUS = {
   SUCCESS: "SUCCESS",
   ERROR: "ERROR",
 };
+
+export const SESSION_KEY = "__contact.app.session";

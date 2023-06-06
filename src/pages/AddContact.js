@@ -29,7 +29,7 @@ import {
   fetchContactById,
   addContactById,
   updateContactById,
-} from "../redux/action/selectedContactActionTypes";
+} from "../redux/actions/selectedContacts";
 
 const defaultContactState = {
   name: "",
@@ -110,16 +110,16 @@ const AddContact = (props) => {
     if (contactState.id) {
       dispatch(
         updateContactById(contactState.id, {
-          name: contactState.name,
-          email: contactState.email,
+          name: contactState.name.trim(),
+          email: contactState.email.trim(),
           starred: contactState.starred,
         })
       );
     } else {
       dispatch(
         addContactById({
-          name: contactState.name,
-          email: contactState.email,
+          name: contactState.name.trim(),
+          email: contactState.email.trim(),
           starred: contactState.starred,
         })
       );
@@ -201,7 +201,7 @@ const AddContact = (props) => {
             {/* <Link as={ReachLink} to="/">
           <Button> Back </Button>
         </Link> */}
-            <Button onClick={() => navigation(-1)}> Back </Button>
+            <Button onClick={() => navigation("/")}> Back </Button>
           </div>
         </Container>
       )}

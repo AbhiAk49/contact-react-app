@@ -4,7 +4,7 @@ import {
   setSingleContactStar,
   setSingleContactUnstar,
   deleteSingleContact,
-} from "./contactActionTypes";
+} from "./contacts";
 import {
   getContact,
   updateContact,

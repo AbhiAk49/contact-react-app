@@ -16,11 +16,11 @@ import withRouterParamsHook from "../components/HOC/withRouterParams"; //used fo
 
 import { useDispatch, useSelector } from "react-redux";
 import { getContactsState } from "../redux/reducers/contacts/selector";
-import { fetchContacts } from "../redux/action/contactActionTypes";
+import { fetchContacts } from "../redux/actions/contacts";
 import {
   deleteContactById,
   updateContactStarredById,
-} from "../redux/action/selectedContactActionTypes";
+} from "../redux/actions/selectedContacts";
 // const defaultContacts = [
 //   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
 //   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
@@ -81,7 +81,6 @@ const ContactList = (props) => {
   // const [, /*URLSearchParams*/ setSearchParams] = props.search;
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("list useEffect called");
     dispatch(fetchContacts(showStarred));
   }, [dispatch, showStarred]);
 

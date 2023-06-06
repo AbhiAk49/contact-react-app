@@ -1,0 +1,4 @@
+export const ActionTypes = {
+  SET_USER_DATA: "AUTH/SET_USER_DATA",
+  CLEAR_USER_DATA: "AUTH/CLEAR_USER_DATA",
+};
