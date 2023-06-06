@@ -12,15 +12,8 @@ import {
   Center,
   Spinner,
 } from "@chakra-ui/react";
-//import { Link as ReachLink, useNavigate, useParams } from "react-router-dom";
-
-// react-hook-form for form validation - https://react-hook-form.com/get-started
-//using navigate hook instead of history as per v5 to v6 react-router changes
-//useSearchParams to get query params -- only in functional component
-//useParams to get path params -- only in functional component
-import withNavigateHook from "../components/HOC/withNavigate"; //used in class based component navigation
-import withRouterParamsHook from "../components/HOC/withRouterParams"; //used for params and query vals
-//Imp read about react useState hook in class and functional component: https://blog.logrocket.com/guide-usestate-react/#class-functional-components-react, https://react.dev/reference/react/useState
+import withNavigateHook from "../components/HOC/withNavigate";
+import withRouterParamsHook from "../components/HOC/withRouterParams";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getSelectedContactState } from "../redux/reducers/selectedContact/selector";
@@ -39,12 +32,10 @@ const defaultContactState = {
   formErrorMessage: "",
 };
 
-//function component syntax
 const AddContact = (props) => {
   const selectedContactState = useSelector(getSelectedContactState);
   const { contact, status, error } = selectedContactState;
   const dispatch = useDispatch();
-  //in functional component need to useState hook to create state and its methods
   const { params, navigation } = props;
   const [contactState, updateContact] = useState({
     ...defaultContactState,
@@ -124,8 +115,6 @@ const AddContact = (props) => {
         })
       );
     }
-    // updateContact({ ...defaultContactState });
-    // props.navigation("/");
   };
 
   return (
@@ -198,9 +187,6 @@ const AddContact = (props) => {
             >
               {`${contactState.id ? "Save" : "Create"}`}
             </Button>
-            {/* <Link as={ReachLink} to="/">
-          <Button> Back </Button>
-        </Link> */}
             <Button onClick={() => navigation("/")}> Back </Button>
           </div>
         </Container>

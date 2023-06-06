@@ -14,22 +14,11 @@ import {
 import { AiOutlineDelete, AiFillStar, AiOutlineStar } from "react-icons/ai";
 import UserSvg from "../images/user.svg";
 import { Link as ReachLink } from "react-router-dom";
-//function component syntax
+
 const ContactCard = (props) => {
-  //const showOnlyStarred = props.showOnlyStarred;
-  //using showStarred to disable rendering of card if it is starred or not
   const { id, name, email, starred } = props.contact;
-  //conditional rendering example
-  //if ((showOnlyStarred && starred) || !showOnlyStarred) {
   return (
-    <ListItem
-      key={id}
-      //alternate to not using if - else
-      // style={{
-      //   display:
-      //     (showOnlyStarred && starred) || !showOnlyStarred ? "block" : "none",
-      // }}
-    >
+    <ListItem key={id}>
       <Card
         direction={{ base: "column", sm: "row" }}
         overflow="hidden"
@@ -72,20 +61,6 @@ const ContactCard = (props) => {
             >
               {`${starred ? "Remove From" : "Add To"} Favourite`}
             </Button>
-            {/* <Button
-          labelPosition="right"
-          onClick={() => {
-            if (starred) props.onContactActionUpdate("unfavorite", id);
-            else props.onContactActionUpdate("favorite", id);
-          }}
-        >
-          <Button icon colorScheme="red">
-            <Icon name={`${starred ? "star outline" : "star"}`} size="large" />
-          </Button>
-          <FormLabel as="a" basic pointing="left">
-            {`${starred ? "Remove From" : "Add To"} Favourite`}
-          </FormLabel>
-        </Button> */}
             <Button
               onClick={() => {
                 props.onContactActionUpdate("delete", id);
@@ -97,13 +72,7 @@ const ContactCard = (props) => {
           </CardFooter>
         </Stack>
       </Card>
-      {/* pathname for path params, search with querystring for query params  -- search: '?random=1'*/}
-      {/* used button as div bcuz cant use button inside button warning */}
-      {/* using onContactActionUpdate prop function handler passed from contactList parent */}
     </ListItem>
   );
-  // } else {
-  //   return null;
-  // }
 };
 export default ContactCard;

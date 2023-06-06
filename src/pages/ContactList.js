@@ -21,11 +21,7 @@ import {
   deleteContactById,
   updateContactStarredById,
 } from "../redux/actions/selectedContacts";
-// const defaultContacts = [
-//   { id: "1", name: "Tom", email: "tom1@gmail.com", starred: true },
-//   { id: "2", name: "Max", email: "max2@gmail.com", starred: true },
-//   { id: "3", name: "Caroline", email: "caroline1@gmail.com", starred: false },
-// ];
+
 const renderContactList = (contacts = [], dispatch, showStarred = false) => {
   const contactActionHadler = (action, id) => {
     switch (action) {
@@ -88,18 +84,8 @@ const ContactList = (props) => {
     showStarred: showStarred,
   });
 
-  // useEffect(() => {
-  //   if (contactListState.showStarred) {
-  //     setSearchParams({ fav_only: "true" });
-  //   } else {
-  //     setSearchParams({ fav_only: "false" });
-  //   }
-  // }, [contactListState.showStarred, setSearchParams]);
 
   const toggleFavHandler = (showStarred) => {
-    // setSearchParams({
-    //   fav_only: !contactListState.showStarred ? "true" : "false",
-    // });
     dispatch(fetchContacts(!showStarred));
   };
   return (
