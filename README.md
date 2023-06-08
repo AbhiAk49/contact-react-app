@@ -1,4 +1,9 @@
 # This project is using Vite to build and run
+
+## Netlify Link
+[https://manage-my-contacts.netlify.app/](https://manage-my-contacts.netlify.app/)
+You can use test credentials - admin@admin.com, adminPassword123
+
 ## Available Scripts
 
 In the project directory, you can run:
