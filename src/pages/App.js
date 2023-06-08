@@ -1,8 +1,4 @@
-
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider, extendTheme, Container } from "@chakra-ui/react";
 import "../styles/App.css";
 import Header from "../components/Header";
@@ -13,6 +9,7 @@ import AuthFormLogin from "../components/AuthFormLogin";
 import AuthFormRegister from "../components/AuthFormRegister";
 import { ToastContainer } from "react-toastify";
 import { AuthorizeUser } from "../middlewares/auth";
+import ErrorBoundary from "../components/HOC/errorBoundary";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +60,7 @@ function App() {
 
   const theme = extendTheme({ colors });
   return (
-    <div>
+    <ErrorBoundary>
       <ChakraProvider resetCSS={true} theme={theme}>
         <Header />
         <Container>
@@ -71,7 +68,7 @@ function App() {
         </Container>
         <ToastContainer />
       </ChakraProvider>
-    </div>
+    </ErrorBoundary>
   );
 }
 
