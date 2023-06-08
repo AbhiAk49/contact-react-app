@@ -2,7 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SESSION_KEY } from "../constants";
-const baseURL = process.env.REACT_APP_BASE_API_URL;
+//const baseURL = process.env.VITE_BASE_API_URL;
+const baseURL = import.meta.env.VITE_BASE_API_URL;
 //using static token -- api key
 
 export const _axios = axios.create({
