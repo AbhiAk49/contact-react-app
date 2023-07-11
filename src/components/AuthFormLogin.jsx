@@ -23,8 +23,8 @@ const AuthFormLogin = (props) => {
   const { state } = useLocation();
   const { navigation } = props;
   useEffect(() => {
-    const access_token = sessionStorage.getItem(SESSION_KEY);
-    if (access_token && authState.is_logged_in) {
+    // const access_token = sessionStorage.getItem(SESSION_KEY);
+    if (authState.is_logged_in) {
       navigation(state?.path || "/");
     } else {
       dispatch(fetchUserData());

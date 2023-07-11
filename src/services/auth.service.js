@@ -11,6 +11,16 @@ const login = async (body = {}) => {
   }
 };
 
+const logout = async (body = {}) => {
+  try {
+    const axiosOptions = getCommonHeaderOptions();
+    const response = await _axios.post("auth/logout", body, axiosOptions);
+    return response.data;
+  } catch (error) {
+    handleUnAuthError(error);
+  }
+};
+
 const register = async (body = {}) => {
   try {
     const axiosOptions = getCommonHeaderOptions();
@@ -31,4 +41,4 @@ const fetchUser = async () => {
   }
 };
 
-export { login, register, fetchUser };
+export { login, register, fetchUser, logout };

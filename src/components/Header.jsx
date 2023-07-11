@@ -2,7 +2,7 @@ import React from "react";
 import { Heading, Container, Divider, Flex, Button } from "@chakra-ui/react";
 import { getAuthState } from "../redux/reducers/auth/selector";
 import { useDispatch, useSelector } from "react-redux";
-import { setlogOut } from "../redux/actions/auth";
+import { logOutUser } from "../redux/actions/auth";
 const AppHeader = () => {
 
   const authState = useSelector(getAuthState);
@@ -13,7 +13,7 @@ const AppHeader = () => {
 
   function handleAuthClick() {
     if (authState.is_logged_in) {
-      dispatch(setlogOut());
+      dispatch(logOutUser());
     }
   }
 
