@@ -8,13 +8,21 @@ const baseURL = import.meta.env.VITE_BASE_API_URL;
 
 export const _axios = axios.create({
   baseURL,
-  withCredentials: true
+  withCredentials: true,
 });
 
 export const onLoadError = (error) => {
-  //console.error("onLoadError", error);
+  if (
+    error.response &&
+    error.response.status &&
+    [401, 403].includes(error.response.status)
+  ) {
+    return;
+  } else {
+    console.error("onLoadError", error);
+  }
   //sessionStorage.removeItem(SESSION_KEY);
-  throw new Error(error?.response?.data?.message || "Session Expired");
+  //throw new Error(error?.response?.data?.message || "Session Expired");
 };
 
 export const handleError = (error) => {

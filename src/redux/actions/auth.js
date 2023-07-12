@@ -57,7 +57,7 @@ export const fetchUserData = () => async (dispatch) => {
     response = await fetchUser();
   } catch (error) {
     dispatch(setlogOut());
-    sessionStorage.removeItem(SESSION_KEY)
+    //sessionStorage.removeItem(SESSION_KEY)
     return;
   }
   dispatch(setlogIn(response));

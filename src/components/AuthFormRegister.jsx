@@ -27,9 +27,10 @@ const AuthFormRegister = (props) => {
     //const access_token = sessionStorage.getItem(SESSION_KEY);
     if (authState.is_logged_in) {
       navigation(state?.path || "/");
-    } else {
-      dispatch(fetchUserData());
     }
+    // } else {
+    //   dispatch(fetchUserData());
+    // }
   }, [authState.is_logged_in, navigation, state?.path, dispatch]);
 
   const [authFormState, setAuthFormState] = useState({

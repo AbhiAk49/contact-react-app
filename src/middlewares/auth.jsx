@@ -9,7 +9,7 @@ export const AuthorizeUser = ({ children }) => {
   const location = useLocation();
   if (!authState.is_logged_in) {
     return (
-      <Navigate to="/auth/login" state={{ path: location.pathname }}></Navigate>
+      <Navigate to="/auth/login" state={{ path: location.pathname }} replace></Navigate>
     );
   }
   return children;
