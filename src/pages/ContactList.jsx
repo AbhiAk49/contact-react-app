@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Button,
@@ -76,6 +76,9 @@ const ContactList = (props) => {
   const { data, status, showStarred } = contactState;
   // const [, /*URLSearchParams*/ setSearchParams] = props.search;
   const dispatch = useDispatch();
+  useEffect(()=> {
+    dispatch(fetchContacts(showStarred));
+  },[])
 
   const [contactListState, updateContactListState] = useState({
     showStarred: showStarred,
