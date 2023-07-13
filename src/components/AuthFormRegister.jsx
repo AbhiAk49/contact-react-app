@@ -24,12 +24,13 @@ const AuthFormRegister = (props) => {
   const { navigation } = props;
 
   useEffect(() => {
-    const access_token = sessionStorage.getItem(SESSION_KEY);
-    if (access_token && authState.is_logged_in) {
+    //const access_token = sessionStorage.getItem(SESSION_KEY);
+    if (authState.is_logged_in) {
       navigation(state?.path || "/");
-    } else {
-      dispatch(fetchUserData());
     }
+    // } else {
+    //   dispatch(fetchUserData());
+    // }
   }, [authState.is_logged_in, navigation, state?.path, dispatch]);
 
   const [authFormState, setAuthFormState] = useState({

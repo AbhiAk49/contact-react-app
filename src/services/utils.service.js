@@ -11,9 +11,9 @@ export const getCommonHeaderOptions = (
       ...extraHeaders,
     },
   };
-  if (isAuthenticated) {
-    const access_token = sessionStorage.getItem(SESSION_KEY);
-    commonOptions["headers"]["Authorization"] = `Bearer ${access_token}`;
-  }
+  // if (isAuthenticated) {
+  //   const access_token = sessionStorage.getItem(SESSION_KEY);
+  //   commonOptions["headers"]["Authorization"] = `Bearer ${access_token}`;
+  // }
   return commonOptions;
 };
