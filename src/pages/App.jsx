@@ -1,5 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChakraProvider, extendTheme, Container } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  extendTheme,
+  Container,
+  Skeleton,
+} from "@chakra-ui/react";
 import "../styles/App.css";
 import Header from "../components/Header";
 import ContactList from "./ContactList";
@@ -10,6 +15,10 @@ import AuthFormRegister from "../components/AuthFormRegister";
 import { ToastContainer } from "react-toastify";
 import { AuthorizeUser } from "../middlewares/auth";
 import ErrorBoundary from "../components/HOC/errorBoundary";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthState } from "../redux/reducers/auth/selector";
+import { fetchUserData } from "../redux/actions/auth";
+import { useEffect } from "react";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +59,12 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const dispatch = useDispatch();
+  const authState = useSelector(getAuthState);
+  const authLoading = authState?.is_loading;
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, []);
   const colors = {
     brand: {
       900: "#1a365d",
@@ -62,10 +77,18 @@ function App() {
   return (
     <ErrorBoundary>
       <ChakraProvider resetCSS={true} theme={theme}>
-        <Header />
-        <Container>
-          <RouterProvider router={router}></RouterProvider>
-        </Container>
+        <Skeleton
+          isLoaded={!authLoading}
+          height={"100vh"}
+          fitContent={false}
+          overflowY={"hidden"}
+          speed={1.6}
+        >
+          <Header />
+          <Container>
+            <RouterProvider router={router}></RouterProvider>
+          </Container>
+        </Skeleton>
         <ToastContainer />
       </ChakraProvider>
     </ErrorBoundary>

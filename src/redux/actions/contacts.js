@@ -1,6 +1,6 @@
 import { ActionTypes } from "../constants/contact-action-types";
 import { getContacts } from "../../services/contact.service";
-
+import { checkForUnauthorized } from "./auth";
 //actions must return plain javascript objects
 //action returns the obj data with payload and action type
 
@@ -68,6 +68,9 @@ export const fetchContacts =
     try {
       response = await getContacts(starred);
     } catch (error) {
+      if(checkForUnauthorized(error, dispatch)){
+        return;
+      }
       dispatch(setContactsError(error));
       return;
     }

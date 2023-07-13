@@ -3,11 +3,11 @@ import { login, register, fetchUser, logout } from "../../services/auth.service"
 import { SESSION_KEY } from "../../constants";
 
 export const logOutUser = () => async (dispatch) => {
+  dispatch(setAuthLoading());
   //sessionStorage.removeItem(SESSION_KEY);
   dispatch(setlogOut());
-  let response;
   try {
-    response = await logout();
+    await logout();
   } catch (error) {
     return;
   }
@@ -20,6 +20,13 @@ export const setlogOut = () => {
   };
 };
 
+export const setAuthLoading = () => {
+  //sessionStorage.removeItem(SESSION_KEY);
+  return {
+    type: ActionTypes.SET_AUTH_LOADING,
+  };
+};
+
 export const setlogIn = (user) => {
   return {
     type: ActionTypes.SET_USER_DATA,
@@ -28,6 +35,7 @@ export const setlogIn = (user) => {
 };
 
 export const logInUser = (data) => async (dispatch) => {
+  dispatch(setAuthLoading());
   let response;
   try {
     response = await login(data);
@@ -40,6 +48,7 @@ export const logInUser = (data) => async (dispatch) => {
 };
 
 export const registerInUser = (data) => async (dispatch) => {
+  dispatch(setAuthLoading());
   let response;
   try {
     response = await register(data);
@@ -52,13 +61,24 @@ export const registerInUser = (data) => async (dispatch) => {
 };
 
 export const fetchUserData = () => async (dispatch) => {
+  dispatch(setAuthLoading());
   let response;
   try {
     response = await fetchUser();
+    dispatch(setlogIn(response));
+    return;
   } catch (error) {
     dispatch(setlogOut());
     //sessionStorage.removeItem(SESSION_KEY)
     return;
   }
-  dispatch(setlogIn(response));
 };
+
+
+export const checkForUnauthorized = (error, dispatch) => {
+  if(error?.message === 'unauthorized'){
+    dispatch(setlogOut());
+    return true;
+  }
+  return false;
+}

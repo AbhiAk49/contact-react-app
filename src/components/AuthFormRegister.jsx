@@ -28,10 +28,7 @@ const AuthFormRegister = (props) => {
     if (authState.is_logged_in) {
       navigation(state?.path || "/");
     }
-    // } else {
-    //   dispatch(fetchUserData());
-    // }
-  }, [authState.is_logged_in, navigation, state?.path, dispatch]);
+  }, [authState.is_logged_in, navigation, state?.path]);
 
   const [authFormState, setAuthFormState] = useState({
     name: "",

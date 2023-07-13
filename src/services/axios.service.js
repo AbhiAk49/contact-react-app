@@ -17,12 +17,12 @@ export const onLoadError = (error) => {
     error.response.status &&
     [401, 403].includes(error.response.status)
   ) {
-    return;
+    throw new Error("unauthorized");
   } else {
-    console.error("onLoadError", error);
+    //console.error("onLoadError", error);
   }
   //sessionStorage.removeItem(SESSION_KEY);
-  //throw new Error(error?.response?.data?.message || "Session Expired");
+  throw new Error(error?.response?.data?.message || "Session Expired");
 };
 
 export const handleError = (error) => {
@@ -31,32 +31,32 @@ export const handleError = (error) => {
     error.response.status &&
     [401, 403].includes(error.response.status)
   ) {
-    console.error("Session expired");
-    sessionStorage.removeItem(SESSION_KEY);
+    console.error("unauthorized", error);
+    //sessionStorage.removeItem(SESSION_KEY);
     //reloading page when we receive un-auth error
     // window.location.reload();
-    throw new Error(error.response.data.message || "Session Expired");
+    throw new Error("unauthorized");
   } else if (
     error.response &&
     error.response.data &&
     error.response.data.message
   ) {
-    toast(error.response.data.message, { autoClose: 3000, type: "error" });
+    toast(error.response.data.message, { autoClose: 2000, type: "error" });
     throw new Error(error.response.data.message);
   } else {
     console.error("axios service error", error);
-    toast.error("Something went wrong");
+    toast.error("Something went wrong", { autoClose: 2000 });
     throw new Error("Something went wrong");
   }
 };
 
 export const handleUnAuthError = (error) => {
   if (error.response && error.response.data && error.response.data.message) {
-    toast(error.response.data.message, { autoClose: 3000, type: "error" });
+    toast(error.response.data.message, { autoClose: 2000, type: "error" });
     throw new Error(error.response.data.message);
   } else {
     console.error("axios service error", error);
-    toast.error("Something went wrong");
+    toast.error("Something went wrong", { autoClose: 2000 });
     throw new Error("Something went wrong");
   }
 };

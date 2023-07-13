@@ -27,10 +27,7 @@ const AuthFormLogin = (props) => {
     if (authState.is_logged_in) {
       navigation(state?.path || "/");
     }
-    // } else {
-    //   dispatch(fetchUserData());
-    // }
-  }, [authState.is_logged_in, state?.path, navigation, dispatch]);
+  }, [authState.is_logged_in, state?.path, navigation]);
 
   const [authFormState, setAuthFormState] = useState({
     email: "",
