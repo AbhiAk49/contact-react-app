@@ -9,7 +9,8 @@ import "../styles/App.css";
 import Header from "../components/Header";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
-import NotFound from "../components/NotFound";
+import NotFound from "./NotFound";
+import OAuthError from "./OAuthError";
 import AuthFormLogin from "../components/AuthFormLogin";
 import AuthFormRegister from "../components/AuthFormRegister";
 import { ToastContainer } from "react-toastify";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/auth/register",
     element: <AuthFormRegister />,
+  },
+  {
+    path: "/oauth/error",
+    element: <OAuthError />,
   },
   {
     path: "/",
