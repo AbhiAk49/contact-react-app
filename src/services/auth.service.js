@@ -1,5 +1,7 @@
 import { _axios, handleUnAuthError, onLoadError } from "./axios.service";
-import { getCommonHeaderOptions } from "./utils.service";
+import { getCommonHeaderOptions, getGoogleOauthUrl } from "./utils.service";
+
+getGoogleOauthUrl();
 
 const login = async (body = {}) => {
   try {

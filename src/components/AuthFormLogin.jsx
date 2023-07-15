@@ -17,6 +17,7 @@ import { logInUser, fetchUserData } from "../redux/actions/auth";
 import { getAuthState } from "../redux/reducers/auth/selector";
 import { useLocation } from "react-router-dom";
 import { SESSION_KEY } from "../constants";
+import appendGoogleOAuth from "./HOC/appendOAuth";
 const AuthFormLogin = (props) => {
   const dispatch = useDispatch();
   const authState = useSelector(getAuthState);
@@ -162,4 +163,4 @@ const AuthFormLogin = (props) => {
   );
 };
 
-export default withNavigateHook(AuthFormLogin);
+export default withNavigateHook(appendGoogleOAuth(AuthFormLogin));
