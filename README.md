@@ -25,6 +25,12 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 ## Learn More
 
+
+## Cookie Based Authentication added ✔️
+Standard Email and Password Authentication now supports cookies.
+Google Based OAuth also supported.
+Note:  For google oauth to work in firefox, turn OFF the enhanced protection.
+
 You can learn more in the [Vite documentation](https://vitejs.dev/guide/).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
