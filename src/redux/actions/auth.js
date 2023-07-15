@@ -40,6 +40,7 @@ export const logInUser = (data) => async (dispatch) => {
   try {
     response = await login(data);
   } catch (error) {
+    dispatch(setlogOut());
     return;
   }
   dispatch(setlogIn(response.user));
@@ -53,6 +54,7 @@ export const registerInUser = (data) => async (dispatch) => {
   try {
     response = await register(data);
   } catch (error) {
+    dispatch(setlogOut());
     return;
   }
   dispatch(setlogIn(response.user));
